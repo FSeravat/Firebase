@@ -1,20 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React,{useState, useEffect} from 'react';
+import {View, Text} from 'react-native';
+import firebase from './src/Connection';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App(){
+
+
+  //Função pegaNome
+   const [nome,setNome]=useState('Testando Nome...');
+   const [idade,setIdade]=useState('Testando Idade...');
+ 
+ 
+    useEffect(()=>{
+     
+      async function Dados(){
+          await firebase.database().ref('usuarios/1').on('value',(snapshot)=>{
+              setNome(snapshot.val().Idade);
+              setIdade(snapshot.val().Nome);
+ 
+          })
+      }
+      Dados();
+    },[]);
+ 
+      return(
+          <View style ={{marginTop:25}}>
+              <Text>{nome}</Text>
+              <Text>{idade}</Text>
+          </View>
+      );
+  }
